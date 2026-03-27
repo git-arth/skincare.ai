@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>skincare.ai</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/sf-pro-display');
+        body, button, input, select, textarea {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+        }
+        body {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        .v0-container {
+            background-color: #2a2a2a;
+            border: 1px solid #3a3a3a;
+        }
+        .v0-input {
+            background-color: #333;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+        .v0-button {
+            background-color: #0070f3;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .v0-button:hover {
+            background-color: #0051a2;
+        }
+        .v0-tab {
+            background-color: #333;
+            color: #e0e0e0;
+            border-color: #444;
+            transition: all 0.3s ease;
+        }
+        .v0-tab.active {
+            background-color: #0070f3;
+            color: white;
+            transform: translateX(10px);
+        }
+        .select2-container--default .select2-selection--multiple,
+        .select2-container--default .select2-selection--single {
+            background-color: #333;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #0070f3;
+            border-color: #0051a2;
+            color: white;
+        }
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #0070f3;
+        }
+        .select2-container--default .select2-results__option,
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            background-color: #333;
+            color: #e0e0e0;
+        }
+        .select2-dropdown {
+            background-color: #333;
+            border-color: #444;
+        }
+        .logo-pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        /* New styles for longer select boxes */
+        .select2-container {
+            width: 100% !important;
+            max-width: none !important;
+        }
+        .select2-selection__rendered {
+            white-space: normal !important;
+            word-break: break-all !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex font-['SF_Pro_Display']">
+    <div id="landing-page" class="fixed inset-0 flex items-center justify-center bg-gray-900 z-50">
+        <div class="text-center">
+            <div class="logo-pulse mb-8">
+                <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" stroke="#0070f3" stroke-width="10"/>
+                    <path d="M30 50 L50 70 L70 30" stroke="#0070f3" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h1 class="text-5xl font-bold mb-8 animate__animated animate__fadeInDown">skincare.ai</h1>
+            <p class="text-xl mb-8 animate__animated animate__fadeInUp">Your personal skin analysis tool using Computer Vision</p>
+            <button id="go-button" class="v0-button py-2 px-6 rounded-full text-lg animate__animated animate__pulse animate__infinite">Go to Application</button>
+        </div>
+    </div>
+
+    <div id="app-content" class="hidden w-full h-screen flex">
+        <div class="w-64 bg-gray-800 p-4 flex flex-col">
+            <div class="flex items-center justify-center mb-8">
+                <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-2">
+                    <circle cx="50" cy="50" r="45" stroke="#0070f3" stroke-width="10"/>
+                    <path d="M30 50 L50 70 L70 30" stroke="#0070f3" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h1 class="text-2xl font-bold">skincare.ai</h1>
+            </div>
+            <ul class="space-y-2 flex-grow">
+                <li>
+                    <a href="#acne-analysis" class="v0-tab active flex items-center p-2 rounded-md">
+                        <i class="fas fa-microscope mr-2"></i>
+                        Analyze your Skin
+                    </a>
+                </li>
+                <li>
+                    <a href="#challenge-analysis" class="v0-tab flex items-center p-2 rounded-md">
+                        <i class="fas fa-chart-bar mr-2"></i>
+                        Weekly Acne Tracker
+                    </a>
+                </li>
+                <li>
+                    <a href="#find-dermatologists" class="v0-tab flex items-center p-2 rounded-md">
+                        <i class="fas fa-user-md mr-2"></i>
+                        Find Dermatologists Around
+                    </a>
+                </li>
+            </ul>
+            <div class="mt-auto text-center text-sm text-gray-500">
+                <p>&copy; 2024 skincare.ai</p>
+                <p>All rights reserved</p>
+            </div>
+        </div>
+        <div class="flex-1 p-8 overflow-y-auto">
+            <div id="acne-analysis" class="fade-in">
+                <h2 class="text-3xl font-semibold mb-4">Acne Analysis</h2>
+                <form id="acne-analysis-form" action="/analyze_acne" method="post" enctype="multipart/form-data" class="space-y-6">
+                    <div id="webcam-capture" class="flex flex-col items-center">
+                        <video id="video" width="400" height="300" autoplay class="rounded-lg mb-2"></video>
+                        <button type="button" id="capture" class="v0-button py-2 px-4 rounded-md">
+                            <i class="fas fa-camera mr-2"></i>Capture Image
+                        </button>
+                        <canvas id="canvas" width="400" height="300" class="hidden rounded-lg mt-2"></canvas>
+                        <input type="hidden" name="webcam_image" id="webcam_image">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="hours_workout" class="block text-sm font-medium mb-1">Hours of Workout per Week</label>
+                            <input type="number" id="hours_workout" name="hours_workout" required class="v0-input w-full rounded-md py-2 px-3">
+                        </div>
+                        <div>
+                            <label for="age" class="block text-sm font-medium mb-1">Age</label>
+                            <input type="number" id="age" name="age" required class="v0-input w-full rounded-md py-2 px-3">
+                        </div>
+                        <div>
+                            <label for="skin_type" class="block text-sm font-medium mb-1">Skin Type</label>
+                            <select id="skin_type" name="skin_type" required class="v0-input w-full rounded-md py-2 px-3">
+                                <option value="oily">Oily</option>
+                                <option value="dry">Dry</option>
+                                <option value="combination">Combination</option>
+                                <option value="normal">Normal</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="skincare_routine" class="block text-sm font-medium mb-1">Skincare Routine</label>
+                            <select id="skincare_routine" name="skincare_routine" multiple="multiple" class="v0-input w-full">
+                                <option value="cleanser">Cleanser</option>
+                                <option value="toner">Toner</option>
+                                <option value="serum">Serum</option>
+                                <option value="moisturizer">Moisturizer</option>
+                                <option value="sunscreen">Sunscreen</option>
+                                <option value="exfoliator">Exfoliator</option>
+                                <option value="face_mask">Face Mask</option>
+                                <option value="eye_cream">Eye Cream</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="v0-button w-full py-2 px-4 rounded-md">
+                        <i class="fas fa-search mr-2"></i>Analyze
+                    </button>
+                </form>
+            </div>
+            <div id="challenge-analysis" class="hidden fade-in">
+                <h2 class="text-3xl font-semibold mb-4">Weekly Acne Tracker - Select a new skincare product</h2>
+                <form id="challenge-analysis-form" action="/challenge_analysis" method="post" enctype="multipart/form-data" class="space-y-6">
+                    <div>
+                        <label for="category" class="block text-sm font-medium mb-1">Product Category</label>
+                        <select id="category" name="category" required class="v0-input w-full rounded-md py-2 px-3">
+                            <option value="">Select a category</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="product_name" class="block text-sm font-medium mb-1">Product Name</label>
+                        <select id="product_name" name="product_name" required class="v0-input w-full rounded-md py-2 px-3">
+                            <option value="">Select a product</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="challenge_image" class="block text-sm font-medium mb-1">Upload Image</label>
+                        <input type="file" id="challenge_image" name="image" accept="image/*" required class="v0-input w-full rounded-md py-2 px-3">
+                    </div>
+                    <button type="submit" class="v0-button w-full py-2 px-4 rounded-md">
+                        <i class="fas fa-chart-line mr-2"></i>Begin!
+                    </button>
+                </form>
+            </div>
+            <div id="find-dermatologists" class="hidden fade-in">
+                <h2 class="text-3xl font-semibold mb-4">Find Dermatologists around your area - Yelp™</h2>
+                <form id="find-dermatologists-form" class="space-y-6">
+                    <div>
+                        <label for="zipcode" class="block text-sm font-medium mb-1">Zip Code</label>
+                        <input type="text" id="zipcode" name="zipcode" required class="v0-input w-full rounded-md py-2 px-3" pattern="[0-9]{5}" title="Five digit zip code">
+                    </div>
+                    <button type="submit" class="v0-button w-full py-2 px-4 rounded-md">
+                        <i class="fas fa-search-location mr-2"></i>Find Dermatologists
+                    </button>
+                </form>
+                <div id="dermatologists-results" class="mt-6"></div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#skincare_routine').select2({
+                placeholder: "Select your skincare routine steps",
+                allowClear: true,
+                width: 'resolve'
+            });
+
+            // Fetch product categories and names
+            $.get('/get_products', function(data) {
+                const categorySelect = $('#category');
+                const productSelect = $('#product_name');
+
+                // Populate categories
+                Object.keys(data).forEach(category => {
+                    categorySelect.append($('<option>', {
+                        value: category,
+                        text: category
+                    }));
+                });
+
+                // Update products when category changes
+                categorySelect.change(function() {
+                    const selectedCategory = $(this).val();
+                    productSelect.empty().append($('<option>', {
+                        value: '',
+                        text: 'Select a product'
+                    }));
+
+                    if (selectedCategory) {
+                        data[selectedCategory].forEach(product => {
+                            productSelect.append($('<option>', {
+                                value: product.product_name,
+                                text: product.product_name  // Remove the price from here
+                            }));
+                        });
+                    }
+                
+                });
+
+                // Initialize Select2 for better UX
+                categorySelect.select2({
+                    width: 'resolve'
+                });
+                productSelect.select2({
+                    width: 'resolve'
+                });
+            });
+        });
+
+        const tabs = document.querySelectorAll('.v0-tab');
+        const contents = document.querySelectorAll('div[id$="-analysis"], div[id="find-dermatologists"]');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = tab.getAttribute('href').substring(1);
+
+                tabs.forEach(t => {
+                    t.classList.remove('active');
+                });
+
+                tab.classList.add('active');
+
+                contents.forEach(content => {
+                    if (content.id === targetId) {
+                        content.classList.remove('hidden');
+                        content.classList.add('fade-in');
+                    } else {
+                        content.classList.add('hidden');
+                        content.classList.remove('fade-in');
+                    }
+                });
+            });
+        });
+
+        // Webcam functionality for Acne Analysis
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('capture');
+        const webcamImage = document.getElementById('webcam_image');
+        let stream;
+
+        async function setupWebcam() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error("Error accessing the webcam", err);
+            }
+        }
+
+        setupWebcam();
+
+        captureButton.addEventListener('click', () => {
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            let image_data_url = canvas.toDataURL('image/jpeg');
+            webcamImage.value = image_data_url;
+            canvas.classList.remove('hidden');
+            video.classList.add('hidden');
+        });
+
+        // Form submission for Acne Analysis
+        document.getElementById('acne-analysis-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            fetch('/analyze_acne', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.body.innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        // Form submission for Challenge Analysis
+        document.getElementById('challenge-analysis-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            fetch('/challenge_analysis', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.body.innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        // Form submission for Find Dermatologists
+        document.getElementById('find-dermatologists-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const zipcode = document.getElementById('zipcode').value;
+            const resultsDiv = document.getElementById('dermatologists-results');
+            resultsDiv.innerHTML = '<p>Loading...</p>';
+
+            fetch('/find_dermatologists', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ zipcode: zipcode })
+            })
+            .then(response => response.text())
+            .then(data => {
+                resultsDiv.innerHTML = data;
+                // Apply font styles after inserting content
+                forceFont();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultsDiv.innerHTML = '<p class="text-red-500">Error fetching dermatologists. Please try again.</p>';
+            });
+        });
+
+        // Function to enforce the custom font
+        function forceFont() {
+            const elements = document.getElementsByTagName('*');
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].style.setProperty('font-family', "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif", 'important');
+            }
+        }
+
+        // Landing page functionality
+        document.getElementById('go-button').addEventListener('click', function() {
+            document.getElementById('landing-page').classList.add('animate__animated', 'animate__fadeOut');
+            setTimeout(() => {
+                document.getElementById('landing-page').classList.add('hidden');
+                document.getElementById('app-content').classList.remove('hidden');
+                document.getElementById('app-content').classList.add('animate__animated', 'animate__fadeIn');
+            }, 500);
+        });
+    </script>
+</body>
+</html>
